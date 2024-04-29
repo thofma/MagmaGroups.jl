@@ -35,7 +35,7 @@ end
 
 function maximal_abelian_quotient(G::MagmaGroup)
   _Q, _f = magf2.AbelianQuotient(data(G))
-  Q = MagmaGrpAbFinGen(_Q)
+  Q = MagmaFinGenAbGroup(_Q)
   return Q, MagmaMap(G, Q, _f)
 end
 

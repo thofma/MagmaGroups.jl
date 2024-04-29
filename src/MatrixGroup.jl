@@ -39,7 +39,7 @@ end
 
 function oscar_matrix_to_magma_matrix(F, m)
   n = nrows(m)
-  _m = map(x -> BigInt(lift(x)), Oscar.Hecke._eltseq(m))
+  _m = map(x -> BigInt(lift(ZZ, x)), Oscar.Hecke._eltseq(m))
   v = magf.Matrix(F, n, n, _m)
   #v = mag"Matrix($F, $n, $n, $(_m))" 
   return v

@@ -161,6 +161,35 @@ function MagmaGroup(A::FinGenAbGroup)
   return MA, AtoMA, MAtoA
 end
 
+function Oscar.isomorphism(::Type{FinGenAbGroup}, A::MagmaFinGenAbGroup)
+  Arel = mag"RelationMatrix($(data(A)))"
+  fl = magb.IsDiagonal(Arel)
+  @assert fl
+  dia = magconvert(Vector, mag"Diagonal($(Arel))")
+  B = abelian_group(dia)
+
+  BtoA = function(x::FinGenAbGroupElem)
+    @assert parent(x) === B
+    co = BigInt.(Hecke._eltseq(x.coeff))
+    return MagmaGroupElem(A, mag"$(data(A))!$(co)")
+  end
+
+  AtoB = function(y)
+    a = B(magconvert(Vector{BigInt}, mag"Eltseq($(data(y)))"))
+    @assert parent(a) === B
+    return a
+  end
+
+  for i in 1:10
+    x = rand(B, 10)
+    y = rand(B, 10)
+    @assert AtoB(BtoA(x)) == x
+    @assert BtoA(x + y) == BtoA(x) + BtoA(y)
+  end
+
+  return B, AtoB, BtoA
+end
+
 function Base.:(+)(x::MagmaGroupElem, y::MagmaGroupElem)
   @assert parent(x) === parent(y)
   return MagmaGroupElem(parent(x), mag"$(data(x)) + $(data(y))")
