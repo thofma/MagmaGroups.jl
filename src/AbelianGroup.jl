@@ -70,7 +70,10 @@ end
 function hom(A::MagmaGroup, B::MagmaGroup, x::Vector)
 	@assert all(y -> parent(y) === B, x)
 	xdata = data.(x)
-	h = mag"hom<$(data(A)) -> $(data(B)) | $(xdata)>"
+	Ad = data(A)
+	Bd = data(B)
+	y = mag"y := $(Ad); return y";
+	h = mag"hom<$y -> $(Bd) | $(xdata)>"
 	return MagmaMap(A, B, h)
 end 
 
